@@ -9,6 +9,7 @@ class VoteList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RandomColor colorPicker = getAlternate(start: 0);
+    String activeVoteId = Provider.of<VoteState>(context).activeVote?.id ?? '';
 
     return Consumer<VoteState>(
       builder: (context, voteState, child) => Column(
@@ -21,12 +22,21 @@ class VoteList extends StatelessWidget {
                     vote.title,
                     style: TextStyle(
                       fontSize: 18,
-                      color: Colors.black
+                      color: activeVoteId == vote.id
+                        ? Colors.white
+                        : Colors.black,
+                      fontWeight: activeVoteId == vote.id
+                        ? FontWeight.bold
+                        : FontWeight.normal
                     ),
                   ),
                 ),
+                selected: activeVoteId == vote.id,
+                onTap: () {
+                  Provider.of<VoteState>(context).activeVote = vote;
+                },
               ),
-              color: colorPicker(),
+              color: activeVoteId == vote.id ? Colors.red : colorPicker(),
             )
         ],
       )

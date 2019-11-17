@@ -39,29 +39,50 @@ class _HomeState extends State<HomePage> {
                 getStep(
                   title: 'Vote',
                   child: Text('vote content'),
-                  isActive: true
+                  isActive: step2Required()
                 )
               ],
               onStepContinue: () {
                 setState(() {
-                  _currentStep = (_currentStep + 1) > 1 ? 1 : _currentStep + 1;
+                  if (step2Required()) {
+                    _currentStep = (_currentStep + 1) > 1 ? 1 : _currentStep + 1;
+                  } else {
+                    showSnackBar(context, 'Please select a vote first');
+                  }
                 });
               },
               onStepCancel: () {
                 setState(() {
+                  if (_currentStep <= 0) {
+                    Provider.of<VoteState>(context).activeVote = null;
+                  }
+
                   _currentStep = (_currentStep - 1) < 0 ? 0 : _currentStep - 1;
                 });
               },
-              onStepTapped: (int index) {
-                setState(() {
-                  _currentStep = index;
-                });
-              },
+              // onStepTapped: (int index) {
+              //   setState(() {
+              //     _currentStep = index;
+              //   });
+              // },
             ),
           )
         ],
       ),
     );
+  }
+
+  bool step2Required () => Provider.of<VoteState>(context).activeVote != null;
+
+  void showSnackBar (BuildContext context, String msg) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(
+        msg,
+        style: TextStyle(
+          fontSize: 22
+        ),
+      ),
+    ));
   }
 
   Step getStep({String title, Widget child, bool isActive = false}) {
