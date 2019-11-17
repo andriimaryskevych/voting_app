@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:voting_app/state/vote.dart';
+import 'package:voting_app/widgets/vote_list.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  _LaunchState createState() => _LaunchState();
+  _HomeState createState() => _HomeState();
 }
 
-class _LaunchState extends State<HomePage> {
+class _HomeState extends State<HomePage> {
   int _currentStep = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<VoteState>(context, listen: false).clearState();
+      Provider.of<VoteState>(context, listen: false).loadVoteList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +33,7 @@ class _LaunchState extends State<HomePage> {
               steps: [
                 getStep(
                   title: 'Choose',
-                  child: Text('choose conenet'),
+                  child: VoteList(),
                   isActive: true
                 ),
                 getStep(
