@@ -40,15 +40,23 @@ class _HomeState extends State<HomePage> {
                 getStep(
                   title: 'Vote',
                   child: VoteWidget(),
-                  isActive: step2Required()
+                  isActive: step2Allowed()
                 )
               ],
               onStepContinue: () {
                 setState(() {
-                  if (step2Required()) {
-                    _currentStep = (_currentStep + 1) > 1 ? 1 : _currentStep + 1;
-                  } else {
-                    showSnackBar(context, 'Please select a vote first');
+                  if (_currentStep == 0) {
+                    if (step2Allowed()) {
+                      _currentStep = (_currentStep + 1) > 1 ? 1 : _currentStep + 1;
+                    } else {
+                      showSnackBar(context, 'Please select a vote first');
+                    }
+                  } else if (_currentStep == 1) {
+                    if (step3Allowed()) {
+                      Navigator.pushReplacementNamed(context, '/result');
+                    } else {
+                      showSnackBar(context, 'Please mark your choise!');
+                    }
                   }
                 });
               },
@@ -58,14 +66,13 @@ class _HomeState extends State<HomePage> {
                     Provider.of<VoteState>(context).activeVote = null;
                   }
 
+                  if(_currentStep <= 1) {
+                    Provider.of<VoteState>(context).selectedOptionInVote = null;
+                  }
+
                   _currentStep = (_currentStep - 1) < 0 ? 0 : _currentStep - 1;
                 });
               },
-              // onStepTapped: (int index) {
-              //   setState(() {
-              //     _currentStep = index;
-              //   });
-              // },
             ),
           )
         ],
@@ -73,7 +80,8 @@ class _HomeState extends State<HomePage> {
     );
   }
 
-  bool step2Required () => Provider.of<VoteState>(context).activeVote != null;
+  bool step2Allowed () => Provider.of<VoteState>(context).activeVote != null;
+  bool step3Allowed () => Provider.of<VoteState>(context).selectedOptionInVote != null;
 
   void showSnackBar (BuildContext context, String msg) {
     Scaffold.of(context).showSnackBar(SnackBar(

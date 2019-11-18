@@ -45,6 +45,7 @@ class VoteWidget extends StatelessWidget {
                     ),
                     Expanded(
                       child: Container(
+                        alignment: Alignment.centerLeft,
                         padding: EdgeInsets.symmetric(horizontal: 5),
                         color: Provider.of<VoteState>(context).selectedOptionInVote == option
                           ? Colors.green
