@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voting_app/state/vote.dart';
+import 'package:voting_app/widgets/vote.dart';
 import 'package:voting_app/widgets/vote_list.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _HomeState extends State<HomePage> {
                 ),
                 getStep(
                   title: 'Vote',
-                  child: Text('vote content'),
+                  child: VoteWidget(),
                   isActive: step2Required()
                 )
               ],
